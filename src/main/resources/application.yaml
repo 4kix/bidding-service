@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bidding-service
+
+bidders:
+  urls: http://localhost:8081, http://localhost:8082, http://localhost:8083
+  connection:
+    connect-timeout: 5
+    read-timeout: 5
