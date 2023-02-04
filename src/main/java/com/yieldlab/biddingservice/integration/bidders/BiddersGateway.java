@@ -3,6 +3,8 @@ package com.yieldlab.biddingservice.integration.bidders;
 import com.yieldlab.biddingservice.dto.BidRequestDTO;
 import com.yieldlab.biddingservice.dto.BidResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -22,14 +24,16 @@ public class BiddersGateway {
 
     private final RestTemplate restTemplate;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BidRequestDTO.class);
+
     public List<BidResponseDTO> getBidsForAd(BidRequestDTO bidRequest) {
 
         List<CompletableFuture<ResponseEntity<BidResponseDTO>>> bidResponseFuturesList = new ArrayList<>();
         biddersUrlList.forEach(url -> {
             CompletableFuture<ResponseEntity<BidResponseDTO>> bidResponseFuture =
                     CompletableFuture.supplyAsync(() -> postBidRequestToBidder(url.trim(), bidRequest))
-                            .exceptionally(exception -> {
-                                //TODO handle and log the error
+                            .exceptionally(e -> {
+                                LOGGER.error("Request to bidder at {} failed with the message: {}" , url, e.getMessage(), e);
                                 return null;
                             });
             bidResponseFuturesList.add(bidResponseFuture);
@@ -41,7 +45,7 @@ public class BiddersGateway {
     }
 
     private ResponseEntity<BidResponseDTO> postBidRequestToBidder(String bidderUrl, BidRequestDTO bidRequest) {
-        //TODO replace sout with normal logger everywhere
+        LOGGER.trace("Making a POST request to a bidder at {}", bidderUrl);
         return restTemplate.postForEntity(bidderUrl.trim(), bidRequest, BidResponseDTO.class);
     }
 
