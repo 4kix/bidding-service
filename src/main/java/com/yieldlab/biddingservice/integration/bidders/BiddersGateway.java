@@ -2,6 +2,7 @@ package com.yieldlab.biddingservice.integration.bidders;
 
 import com.yieldlab.biddingservice.dto.BidRequestDTO;
 import com.yieldlab.biddingservice.dto.BidResponseDTO;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +45,11 @@ public class BiddersGateway {
                 .map(ResponseEntity::getBody).toList();
     }
 
+    @Retry(name = "postBidderRetry")
     private ResponseEntity<BidResponseDTO> postBidRequestToBidder(String bidderUrl, BidRequestDTO bidRequest) {
         LOGGER.trace("Making a POST request to a bidder at {}", bidderUrl);
         return restTemplate.postForEntity(bidderUrl.trim(), bidRequest, BidResponseDTO.class);
+        //TODO handle exceptions with fallback?
     }
 
 }

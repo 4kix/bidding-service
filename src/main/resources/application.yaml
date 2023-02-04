@@ -10,3 +10,10 @@ bidders:
   connection:
     connect-timeout: 5
     read-timeout: 5
+
+resilience4j:
+  retry:
+    instances:
+      myRetry:
+        max-attempts: 3
+        wait-duration: 1s
