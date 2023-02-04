@@ -16,9 +16,12 @@ bidders:
 resilience4j:
   retry:
     instances:
-      myRetry:
+      postBidderRetry:
         max-attempts: 3
         wait-duration: 1s
+        retry-exceptions:
+          - java.net.ConnectException
+          - org.springframework.web.client.HttpServerErrorException
 
 logging:
   level:

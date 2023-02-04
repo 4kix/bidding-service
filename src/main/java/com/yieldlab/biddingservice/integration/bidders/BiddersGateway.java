@@ -23,7 +23,7 @@ public class BiddersGateway {
     @Value("#{'${bidders.urls}'.split(',')}")
     private List<String> biddersUrlList;
 
-    private final RestTemplate restTemplate;
+    private final BiddersConnector biddersConnector;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BidRequestDTO.class);
 
@@ -32,7 +32,7 @@ public class BiddersGateway {
         List<CompletableFuture<ResponseEntity<BidResponseDTO>>> bidResponseFuturesList = new ArrayList<>();
         biddersUrlList.forEach(url -> {
             CompletableFuture<ResponseEntity<BidResponseDTO>> bidResponseFuture =
-                    CompletableFuture.supplyAsync(() -> postBidRequestToBidder(url.trim(), bidRequest))
+                    CompletableFuture.supplyAsync(() -> biddersConnector.postBidRequestToBidder(url.trim(), bidRequest))
                             .exceptionally(e -> {
                                 LOGGER.error("Request to bidder at {} failed with the message: {}" , url, e.getMessage(), e);
                                 return null;
@@ -43,13 +43,6 @@ public class BiddersGateway {
         return bidResponseFuturesList.stream().map(CompletableFuture::join)
                 .filter(Objects::nonNull)
                 .map(ResponseEntity::getBody).toList();
-    }
-
-    @Retry(name = "postBidderRetry")
-    private ResponseEntity<BidResponseDTO> postBidRequestToBidder(String bidderUrl, BidRequestDTO bidRequest) {
-        LOGGER.trace("Making a POST request to a bidder at {}", bidderUrl);
-        return restTemplate.postForEntity(bidderUrl.trim(), bidRequest, BidResponseDTO.class);
-        //TODO handle exceptions with fallback?
     }
 
 }
