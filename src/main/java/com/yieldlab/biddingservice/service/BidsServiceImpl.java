@@ -2,6 +2,7 @@ package com.yieldlab.biddingservice.service;
 
 import com.yieldlab.biddingservice.dto.BidRequestDTO;
 import com.yieldlab.biddingservice.dto.BidResponseDTO;
+import com.yieldlab.biddingservice.exception.NoBidsForAuctionException;
 import com.yieldlab.biddingservice.integration.bidders.BiddersGateway;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -29,13 +30,14 @@ public class BidsServiceImpl implements BidsService {
         List<BidResponseDTO> bidResponses = biddersGateway.getBidsForAd(bidRequest);
         if (bidResponses.isEmpty()) {
             LOGGER.warn("No bids were found for the auction. Ad ID: {}, attributes: {}", adId, params);
+            throw new NoBidsForAuctionException("No bids where found for the auction");
         }
         return chooseWinningBid(bidResponses);
     }
 
     private BidResponseDTO chooseWinningBid(List<BidResponseDTO> bidsList) {
         return bidsList.stream()
-                .max(Comparator.comparingInt(BidResponseDTO::getBid)).orElseThrow();
-        //TODO process NoSuchElementException (when list is empty)
+                .max(Comparator.comparingInt(BidResponseDTO::getBid))
+                .orElseThrow();
     }
 }

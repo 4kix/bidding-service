@@ -1,5 +1,7 @@
 server:
   port: 8080
+  error:
+    include-stacktrace: never
 
 spring:
   application:
@@ -17,3 +19,7 @@ resilience4j:
       myRetry:
         max-attempts: 3
         wait-duration: 1s
+
+logging:
+  level:
+    com.yieldlab.biddingservice: INFO

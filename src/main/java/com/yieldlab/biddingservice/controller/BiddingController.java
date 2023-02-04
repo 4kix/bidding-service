@@ -24,7 +24,7 @@ public class BiddingController {
 
     @GetMapping("{id}")
     public ResponseEntity<String> initiateAuction(@PathVariable Integer id, @RequestParam Map<String, String> params) {
-        LOGGER.info("Initiating a new auction with params: {}", params.toString());
+        LOGGER.info("Initiating a new auction for ad ID {} with params: {}", id, params.toString());
         BidResponseDTO auctionWinner = bidsService.holdAuction(id, params);
         String formattedResponse = BidContentFormatter.formatBidContent(auctionWinner);
         return ResponseEntity.ok(formattedResponse);
