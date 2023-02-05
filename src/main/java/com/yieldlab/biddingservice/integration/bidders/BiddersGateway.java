@@ -2,14 +2,12 @@ package com.yieldlab.biddingservice.integration.bidders;
 
 import com.yieldlab.biddingservice.dto.BidRequestDTO;
 import com.yieldlab.biddingservice.dto.BidResponseDTO;
-import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 public class BiddersGateway {
 
     @Value("#{'${bidders.urls}'.split(',')}")
-    private List<String> biddersUrlList;
+    private final List<String> biddersUrlList;
 
     private final BiddersConnector biddersConnector;
 
