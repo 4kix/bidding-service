@@ -12,9 +12,8 @@ import java.util.Map;
 @NoArgsConstructor
 public class BidRequestDTO {
 
-    //TODO make long or int?
     @JsonProperty("id")
-    private Integer id;
+    private Long id;
 
     @JsonProperty("attributes")
     private Map<String,String> attributes;

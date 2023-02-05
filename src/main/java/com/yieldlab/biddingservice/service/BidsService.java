@@ -6,6 +6,6 @@ import java.util.Map;
 
 public interface BidsService {
 
-    BidResponseDTO holdAuction(Integer adId, Map<String, String> params);
+    BidResponseDTO holdAuction(Long adId, Map<String, String> params);
 
 }

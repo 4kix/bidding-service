@@ -1,6 +1,5 @@
 package com.yieldlab.biddingservice.service;
 
-import com.yieldlab.biddingservice.dto.BidRequestDTO;
 import com.yieldlab.biddingservice.dto.BidResponseDTO;
 import com.yieldlab.biddingservice.exception.NoBidsForAuctionException;
 import com.yieldlab.biddingservice.integration.bidders.BiddersGateway;
@@ -39,18 +38,18 @@ class BidsServiceImplTest {
     @Test
     void holdAuction_whenAuctionSucceed_thenReturnWinner() {
 
-        when(biddersGateway.getBidsForAd(any(BidRequestDTO.class)))
+        when(biddersGateway.getBidsForAd(anyLong(), anyMap()))
                 .thenReturn(bidResponses);
 
-        BidResponseDTO actualResult = bidsService.holdAuction(1, new HashMap<>());
+        BidResponseDTO actualResult = bidsService.holdAuction(1L, new HashMap<>());
         assertEquals(actualResult, expectedWinner);
     }
     @Test
     void holdAuction_whenNoBidders_thenThrowsException() {
-        when(biddersGateway.getBidsForAd(any(BidRequestDTO.class)))
+        when(biddersGateway.getBidsForAd(anyLong(), anyMap()))
                 .thenReturn(Collections.emptyList());
 
-        assertThrows(NoBidsForAuctionException.class, () -> bidsService.holdAuction(1, new HashMap<>()));
+        assertThrows(NoBidsForAuctionException.class, () -> bidsService.holdAuction(1L, new HashMap<>()));
     }
 
 }

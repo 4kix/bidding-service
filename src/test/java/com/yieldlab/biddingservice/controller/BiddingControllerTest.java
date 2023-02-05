@@ -42,19 +42,19 @@ class BiddingControllerTest {
 
     @Test
     void initiateAuction_whenHasWinner_thenContent() throws Exception {
-        when(bidsService.holdAuction(anyInt(), anyMap()))
+        when(bidsService.holdAuction(anyLong(), anyMap()))
                 .thenReturn(new BidResponseDTO(1L, 250, "a:$price$"));
 
         MockHttpServletResponse response = mockMvc.perform(get("/1").queryParam("a","5"))
                 .andReturn().getResponse();
-        verify(bidsService, times(1)).holdAuction(anyInt(), anyMap());
+        verify(bidsService, times(1)).holdAuction(anyLong(), anyMap());
 
         assertEquals(response.getContentAsString(), "a:250");
     }
 
     @Test
     void initiateAuction_whenNoBidsFound_thenEmptyBody() throws Exception {
-        when(bidsService.holdAuction(anyInt(), anyMap()))
+        when(bidsService.holdAuction(anyLong(), anyMap()))
                 .thenThrow(new NoBidsForAuctionException("No bids where found for the auction"));
 
         MockHttpServletResponse response = mockMvc.perform(get("/1").queryParam("a","5"))

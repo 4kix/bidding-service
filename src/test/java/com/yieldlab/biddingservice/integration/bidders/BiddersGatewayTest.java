@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,7 +37,7 @@ class BiddersGatewayTest {
         when(biddersConnector.postBidRequestToBidder(anyString(), any(BidRequestDTO.class)))
                 .thenReturn(new ResponseEntity<>(new BidResponseDTO(1L, 150, "a:$price$"), HttpStatus.OK));
 
-        List<BidResponseDTO> actualResult = biddersGateway.getBidsForAd(new BidRequestDTO());
+        List<BidResponseDTO> actualResult = biddersGateway.getBidsForAd(1L, new HashMap<>());
 
         assertEquals(expectedResult(), actualResult);
     }

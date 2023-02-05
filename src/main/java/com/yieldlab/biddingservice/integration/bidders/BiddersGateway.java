@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -25,7 +26,9 @@ public class BiddersGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BidRequestDTO.class);
 
-    public List<BidResponseDTO> getBidsForAd(BidRequestDTO bidRequest) {
+    public List<BidResponseDTO> getBidsForAd(Long adId, Map<String, String> params) {
+
+        BidRequestDTO bidRequest = new BidRequestDTO(adId, params);
 
         List<CompletableFuture<ResponseEntity<BidResponseDTO>>> bidResponseFuturesList = new ArrayList<>();
         biddersUrlList.forEach(url -> {
