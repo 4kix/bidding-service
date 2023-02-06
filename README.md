@@ -26,7 +26,7 @@ Make sure you are in the project root directory.
    `docker images yieldlab/bidding-service`
 
 4. To run the container execute:
-   `docker run --network="host" yieldlab/bidding-service`
+   `docker run --network="host" yieldlab/bidding-service`\
    Here container's `--network` is set to `"host"` in order to allow the application access to test bidders via localhost
 
 #### Manual approach:
