@@ -22,6 +22,7 @@ resilience4j:
         retry-exceptions:
           - java.net.ConnectException
           - org.springframework.web.client.HttpServerErrorException
+          - org.springframework.web.client.ResourceAccessException
 
 logging:
   level:

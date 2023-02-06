@@ -1,17 +1,14 @@
 package com.yieldlab.biddingservice.controller;
 
-import com.yieldlab.biddingservice.dto.BidRequestDTO;
 import com.yieldlab.biddingservice.dto.BidResponseDTO;
 import com.yieldlab.biddingservice.exception.BiddersExceptionHandler;
 import com.yieldlab.biddingservice.exception.NoBidsForAuctionException;
 import com.yieldlab.biddingservice.service.BidsService;
-import com.yieldlab.biddingservice.util.BidContentFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -53,7 +50,7 @@ class BiddingControllerTest {
     }
 
     @Test
-    void initiateAuction_whenNoBidsFound_thenEmptyBody() throws Exception {
+    void initiateAuction_whenNoBidsFound_thenNotFound() throws Exception {
         when(bidsService.holdAuction(anyLong(), anyMap()))
                 .thenThrow(new NoBidsForAuctionException("No bids where found for the auction"));
 
@@ -61,6 +58,6 @@ class BiddingControllerTest {
                 .andReturn().getResponse();
 
         assertTrue(response.getContentAsString().isEmpty());
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
+        assertEquals(response.getStatus(), HttpStatus.NOT_FOUND.value());
     }
 }
