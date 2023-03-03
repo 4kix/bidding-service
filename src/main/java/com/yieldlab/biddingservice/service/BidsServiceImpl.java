@@ -23,7 +23,6 @@ public class BidsServiceImpl implements BidsService {
     @Override
     public BidResponseDTO holdAuction(Long adId, Map<String, String> params) {
 
-        //TODO better return new class object instead of BidResponseDTO
         List<BidResponseDTO> bidResponses = biddersGateway.getBidsForAd(adId, params);
         if (bidResponses.isEmpty()) {
             LOGGER.warn("No bids were found for the auction. Ad ID: {}, attributes: {}", adId, params);
