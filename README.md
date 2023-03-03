@@ -14,6 +14,107 @@ To run the test bidders and scripts you will need:
 [diffutils]: https://www.gnu.org/software/diffutils/
 [curl-dl]: https://curl.haxx.se/download.html
 
+## The task
+
+Build a bidding system behaving as following:
+
+For every incoming request as described in [1], send out bid requests as
+described in [2] to a configurable number of bidders [5]. Responses from these
+bidders as described in [3] must be processed. The highest bidder wins, and
+payload is sent out as described in [4].
+
+Incoming and outgoing communication is to be done over HTTP. Message formats
+are described below.
+
+[1]: #1-incoming-requests
+[2]: #2-bid-requests
+[3]: #3-bid-response
+[4]: #4-auction-response
+[5]: #5-configuration
+
+### 1 Incoming Requests
+
+The application must listen to incoming HTTP requests on port 8080.
+
+An incoming request is of the following format:
+
+    http://localhost:8080/[id]?[key=value,...]
+
+The URL will contain an ID to identify the ad for the auction, and a number of
+query-parameters.
+
+### 2 Bid Requests
+
+The application must forward incoming bid requests by sending a corresponding
+HTTP POST request to each of the configured bidders with the body in the
+following JSON format:
+
+```json
+{
+	"id": $id,
+	"attributes" : {
+		"$key": "$value",
+		...
+	}
+}
+```
+
+The property `attributes` must contain all incoming query-parameters.
+Multi-value parameters need not be supported.
+
+### 3 Bid Response
+
+The bidders' response will contain details of the bid(offered price), with `id` and `bid`
+values in a numeric format:
+
+```json
+{
+	"id" : $id,
+	"bid": bid,
+	"content": "the string to deliver as a response"
+}
+```
+
+### 4 Auction Response
+
+The response for the auction must be the `content` property of the winning bid,
+with some tags that can be mentioned in the content replaced with respective values.
+
+For now, only `$price$` must be supported, denoting the final price of the bid.
+
+Example:
+
+
+Following bid responses:
+```json
+{
+	"id" : 123,
+	"bid": 750,
+	"content": "a:$price$"
+}
+```
+and
+
+```json
+{
+	"id" : 123,
+	"bid": 500,
+	"content": "b:$price$"
+}	
+```
+will produce auction response as string:
+a:750
+
+### 5 Configuration
+
+The application should have means to accept accept a number of configuration
+parameters. For the scope of this task, only one parameter is to be supported:
+
+| Parameter | Meaning                                                  |
+|-----------|----------------------------------------------------------|
+| `bidders` | a comma-separated list of URLs denoting bidder endpoints |
+
+
 ## How to run
 
 ### Build and Deployment
